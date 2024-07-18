@@ -18,17 +18,19 @@ public class CreateOrdersTest
         Order order = new()
         {
             Id = 1,
-            NameShare = "B3",
+            NameShare = "Teste",
             QuantityShares = 1,
-            ShareValue = 1,
-            PurchaseDate = Convert.ToDateTime("2023-09-23")
+            ShareValue = 10,
+            PurchaseDate = DateTime.UtcNow
         };
+
+        CreateOrdersCommand createOrdersCommand = new("Teste", 1, 10, DateTime.UtcNow);
 
         _ordersRepository.Setup(x => x.CreateOrderAsync(order)).ReturnsAsync(order);
         var commandHandler = new CreateOrdersCommandHandler(_ordersRepository.Object);
 
         //Act
-        var response = await commandHandler.Handle(new CreateOrdersCommand ( order.NameShare, order.QuantityShares, order.ShareValue, order.PurchaseDate ), cancellationToken);
+        var response = await commandHandler.Handle(createOrdersCommand, cancellationToken);
 
         //Assert
         Assert.NotNull(response);
